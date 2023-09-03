@@ -1,0 +1,10 @@
+@import './styles/loading.css';
+@import './styles/welcome.css';
+
+:root {
+    --main_blue: #1677ff;
+}
+
+body {
+    margin: 0;
+}
