@@ -1,0 +1,10 @@
+/* styles/tailwind.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import './styles/loading.css';
+
+body {
+    margin: 0;
+}
