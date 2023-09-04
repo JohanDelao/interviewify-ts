@@ -36,7 +36,7 @@ export default function Welcome() {
               app. Get personalized feedback on your responses to common
               questions and practice at your own pace.
             </p>
-            <form>
+            <form action="http://localhost:4000/auth/google">
               <button className="w-11/12 md:w-80 xl:w-80 h-16 rounded-md bg-[#3772FF] grid grid-cols-6 px-3 justify-center items-center mt-3">
                 <div className="col-span-1 bg-slate-300 rounded-md h-4/6 flex justify-center items-center">
                   <Image src={Google} height={24} width={24} alt="..."></Image>
