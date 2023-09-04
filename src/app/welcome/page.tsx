@@ -6,8 +6,15 @@ import Image from 'next/image';
 import Logo from '../../../public/images/logo.png';
 import Google from '../../../public/images/GoogleLogo.png';
 import CoverImage from '../../../public/images/coverImage.png';
+import { useRouter } from 'next/navigation';
 
 export default function Welcome() {
+  const router = useRouter();
+
+  const SignInFunction = function () {
+    router.push('/start/dashboard');
+  };
+
   return (
     <Layout style={{ background: 'white', minHeight: '80vh' }}>
       <Header className="bg-white flex justify-center md:justify-between md:items-center shadow">
@@ -19,6 +26,7 @@ export default function Welcome() {
           <Button
             className="bg-[#1677ff] flex w-44 justify-center items-center gap-2"
             size="large"
+            onClick={SignInFunction}
           >
             <p className="text-white m-0 font-medium text-xl">Join for free</p>
             <ArrowRightOutlined className="text-white" />
@@ -37,7 +45,10 @@ export default function Welcome() {
               questions and practice at your own pace.
             </p>
             <form>
-              <button className="w-11/12 md:w-80 xl:w-80 h-16 rounded-md bg-[#3772FF] grid grid-cols-6 px-3 justify-center items-center mt-3">
+              <Button
+                className="w-11/12 md:w-80 xl:w-80 h-16 rounded-md bg-[#1677ff] grid grid-cols-6 px-3 justify-center items-center mt-3"
+                onClick={SignInFunction}
+              >
                 <div className="col-span-1 bg-slate-300 rounded-md h-4/6 flex justify-center items-center">
                   <Image src={Google} height={24} width={24} alt="..."></Image>
                 </div>
@@ -46,7 +57,7 @@ export default function Welcome() {
                     Continue with Google
                   </p>
                 </div>
-              </button>
+              </Button>
             </form>
           </div>
           <div className="WelcomeContentRight">
