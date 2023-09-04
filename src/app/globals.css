@@ -4,13 +4,7 @@
 @tailwind utilities;
 
 @import './styles/loading.css';
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&display=swap');
-
-:root {
-    --main_blue: #1677ff;
-}
 
 body {
     margin: 0;
-    font-family: 'Poppins', sans-serif;
 }
