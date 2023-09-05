@@ -17,15 +17,16 @@ export default function Home() {
             withCredentials: true,
           },
         );
-        console.log(res);
         setUser(res.data.user);
+        if (res.data.user) {
+          router.push('/dashboard');
+        }
       } catch (error) {
         console.log(error);
       }
     };
 
     getUser();
-    console.log(user);
     if (user) {
       router.push('/dashboard');
     } else {
