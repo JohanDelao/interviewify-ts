@@ -5,7 +5,7 @@ import React from 'react';
 import Image from 'next/image';
 import { Layout, Menu, MenuProps } from 'antd';
 const { Footer, Sider } = Layout;
-import Logo from '../../../public/images/LogoV2.png'
+import Logo from '../public/images/LogoV2.png';
 import { ClockCircleOutlined, UserOutlined, ExclamationCircleOutlined, LogoutOutlined } from '@ant-design/icons';
 
 type MenuItem = Required<MenuProps>['items'][number];

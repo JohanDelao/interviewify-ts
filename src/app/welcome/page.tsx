@@ -3,9 +3,9 @@ import { Layout, Button } from 'antd';
 import { Content, Header } from 'antd/es/layout/layout';
 import { ArrowRightOutlined } from '@ant-design/icons';
 import Image from 'next/image';
-import Logo from '../../../public/images/logo.png';
-import Google from '../../../public/images/GoogleLogo.png';
-import CoverImage from '../../../public/images/coverImage.png';
+import Logo from '../public/images/logo.png';
+import Google from '../public/images/GoogleLogo.png';
+import CoverImage from '../public/images/coverImage.png';
 import { useRouter } from 'next/navigation';
 
 export default function Welcome() {
