@@ -8,3 +8,16 @@
 body {
     margin: 0;
 }
+
+.SideBarNav {
+    background-color: #1677ff !important;
+}
+
+.SideBarMenu {
+    background-color: #1677ff !important;
+    color: white;
+}
+
+.SideBarMenu :hover{
+    color: white !important;
+}

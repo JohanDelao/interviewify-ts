@@ -19,7 +19,7 @@ export default function Home() {
         );
         setUser(res.data.user);
         if (res.data.user) {
-          router.push('/dashboard');
+          router.push('start/dashboard');
         }
       } catch (error) {
         console.log(error);

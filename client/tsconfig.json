@@ -32,7 +32,8 @@
     "client/next-env.d.ts",
     "**/*.ts",
     "**/*.client/.next/types/**/*.ts**/*.ts",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    "public/images/**/*.ts"
   ],
   "exclude": [
     "node_modules"

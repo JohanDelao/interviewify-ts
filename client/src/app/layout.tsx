@@ -1,4 +1,5 @@
 import './globals.css';
+import React from 'react';
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import Loading from './components/loading';
