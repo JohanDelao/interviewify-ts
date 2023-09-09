@@ -1,20 +1,21 @@
 'use client';
-import { useState } from "react";
-import { Button, Dropdown, Space } from "antd";
-import { DownOutlined, UserOutlined } from "@ant-design/icons";
-import { MenuProps } from "antd";
+import { useState } from 'react';
+import React from 'react';
+import { Button, Dropdown, Space } from 'antd';
+import { DownOutlined, UserOutlined } from '@ant-design/icons';
+import { MenuProps } from 'antd';
 
 export default function Dashboard() {
   const [profession, setProfession] = useState('Software Engineer');
 
   const handleMenuClick: MenuProps['onClick'] = (e) => {
-    setProfession(e.key)
+    setProfession(e.key);
   };
 
   const handleNumberClick: MenuProps['onClick'] = (e) => {
-    setNumberQuestions(parseInt(e.key))
-  }
-  
+    setNumberQuestions(parseInt(e.key));
+  };
+
   const items: MenuProps['items'] = [
     {
       label: 'Software Engineer',
@@ -32,7 +33,7 @@ export default function Dashboard() {
       icon: <UserOutlined />,
     },
   ];
-  
+
   const menuProps = {
     items,
     onClick: handleMenuClick,
@@ -42,45 +43,39 @@ export default function Dashboard() {
     items: [
       {
         label: '1',
-        key: '1'
+        key: '1',
       },
       {
         label: '2',
-        key: '2'
+        key: '2',
       },
       {
         label: '3',
-        key: '3'
+        key: '3',
       },
       {
         label: '4',
-        key: '4'
+        key: '4',
       },
     ],
     onClick: handleNumberClick,
-  }
+  };
 
   const [numberQuestions, setNumberQuestions] = useState(1);
-  const [toggleDropNumber, setToggleDropNumber] = useState(false);
-
-  const numberChange = (value: number) => {
-    setNumberQuestions(value)
-    setToggleDropNumber(!toggleDropNumber)
-  }
 
   return (
     <div className="lg:max-w-screen-lg lg:mx-auto flex flex-col w-full mt-8 gap-16 lg:gap-36">
       <div className="flex flex-col gap-4 mx-auto md:mx-auto px-4 md:px-0 md:w-11/12 w-10/12">
         <p className="text-2xl font-bold">Profession</p>
         <div className="flex flex-col w-fit">
-        <Dropdown menu={menuProps}>
-          <Button>
-            <Space>
-              {profession}
-              <DownOutlined />
-            </Space>
-          </Button>
-        </Dropdown>
+          <Dropdown menu={menuProps}>
+            <Button>
+              <Space>
+                {profession}
+                <DownOutlined />
+              </Space>
+            </Button>
+          </Dropdown>
         </div>
       </div>
       <div className="flex flex-col items-center gap-4 md:gap-2">
@@ -114,5 +109,5 @@ export default function Dashboard() {
         </p>
       </div>
     </div>
-  )
+  );
 }
