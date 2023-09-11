@@ -17,14 +17,14 @@ export default function Welcome() {
           <p className="font-bold text-2xl lg:text-3xl">Interviewify</p>
         </div>
         <div className="flex items-center md:block hidden">
-          <Button
-            className="bg-[#1677ff] flex w-44 justify-center items-center gap-2"
-            size="large"
-            // onClick={SignInFunction}
+        <form action="http://localhost:4000/auth/google">
+          <button
+            className="bg-[#1677ff] flex w-44 justify-center items-center gap-2 rounded-md h-10"
           >
             <p className="text-white m-0 font-medium text-xl">Join for free</p>
             <ArrowRightOutlined className="text-white" />
-          </Button>
+          </button>
+        </form>
         </div>
       </Header>
       <div className="lg:max-w-screen-2xl lg:mx-auto">
