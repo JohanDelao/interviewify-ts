@@ -1,23 +1,24 @@
 'use client';
 
 import '../globals.css';
-import React from 'react';
-// import Image from 'next/image';
+import React, { useEffect, useState } from 'react';
+import Image from 'next/image';
 import { Layout, Menu, MenuProps } from 'antd';
 const { Footer, Sider } = Layout;
 import { Suspense } from 'react';
 import Loading from './loading';
-// import Logo from '../public/images/LogoV2.png';
+import Logo from '../public/images/LogoV2.png';
 import {
   ClockCircleOutlined,
   UserOutlined,
   ExclamationCircleOutlined,
   LogoutOutlined,
 } from '@ant-design/icons';
+import axios from 'axios';
+import { useRouter } from 'next/navigation';
+import {User} from '../utils/interfaces'
 
 type MenuItem = Required<MenuProps>['items'][number];
-
-const user = 'johandelao10@gmail.com';
 
 function getItem(
   label: React.ReactNode,
@@ -35,20 +36,56 @@ function getItem(
   } as MenuItem;
 }
 
-const items: MenuProps['items'] = [
-  getItem('History', 'history', <ClockCircleOutlined />),
-  getItem('Profile', 'profile', <UserOutlined />, [
-    getItem(user, 'user email'),
-    getItem('Report a bug', 'report', <ExclamationCircleOutlined />),
-    getItem('Logout', 'logout', <LogoutOutlined />),
-  ]),
-];
+// const user = 'johandelao10@gmail.com';
 
 export default function RegularLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const [user, setUser] = useState<User>({
+    email: "",
+    username: "",
+    _v: 0,
+    _id: ""
+  });
+  const router = useRouter();
+
+  const handleLogout = () => {
+    axios
+      .get('http://localhost:4000/auth/logout')
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
+    router.push('/welcome');
+  };
+
+  useEffect(() => {
+    const getUser = async () => {
+      try {
+        const res = await axios.get(
+          'http://localhost:4000/auth/login/success',
+          {
+            withCredentials: true,
+          },
+        );
+        setUser(res.data.user);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    getUser();
+  }, []);
+
+  const items: MenuProps['items'] = [
+    getItem('History', 'history', <ClockCircleOutlined />),
+    getItem('Profile', 'profile', <UserOutlined />, [
+      getItem(user.email, 'user email'),
+      getItem('Report a bug', 'report', <ExclamationCircleOutlined />),
+      getItem('Logout', 'logout', <LogoutOutlined />),
+    ]),
+  ];
+
   return (
     <Suspense fallback={<Loading />}>
       <div>
@@ -60,25 +97,34 @@ export default function RegularLayout({
             collapsedWidth={0}
           >
             <div className="flex gap-2 justify-center items-center w-11/12 mx-auto rounded-md mt-5 mb-5">
-              {/* <Image
-              src={Logo}
-              height={30}
-              width={30}
-              alt="logo of interviewify"
-            /> */}
+              <Image
+                src={Logo}
+                height={30}
+                width={30}
+                alt="logo of interviewify"
+              />
               <p className="text-xl font-bold text-white">Interviewify</p>
             </div>
             <Menu
               className="SideBarMenu hover:text-white"
               mode="inline"
               items={items}
+              onClick={(info) => {
+                if (info.key === 'logout') {
+                  handleLogout();
+                }
+              }}
             />
           </Sider>
           <Layout
             className="site-layout min-h-screen grid grid-rows-10"
             style={{ background: 'white' }}
           >
-            <div className="row-span-9">{children}</div>
+            <div className="row-span-9">
+              <Suspense fallback={<Loading />}>
+                {children}
+              </Suspense>
+              </div>
             <Footer
               className="row-span-1 flex items-center justify-center"
               style={{ textAlign: 'center' }}
