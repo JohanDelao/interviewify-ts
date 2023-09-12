@@ -15,7 +15,7 @@ import {
   LogoutOutlined,
 } from '@ant-design/icons';
 import axios from 'axios';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import {User} from '../utils/interfaces'
 
 type MenuItem = Required<MenuProps>['items'][number];
@@ -49,7 +49,9 @@ export default function RegularLayout({
     _v: 0,
     _id: ""
   });
+  const [selectedMenuItem, setSelectedMenuItem] = useState("");
   const router = useRouter();
+  const path = usePathname();
 
   const handleLogout = () => {
     axios
@@ -96,7 +98,10 @@ export default function RegularLayout({
             breakpoint="sm"
             collapsedWidth={0}
           >
-            <div className="flex gap-2 justify-center items-center w-11/12 mx-auto rounded-md mt-5 mb-5">
+            <div className="flex gap-2 justify-center items-center w-11/12 mx-auto rounded-md mt-5 mb-5 cursor-pointer" onClick={() => {
+              setSelectedMenuItem("");
+              router.push('/start/dashboard')
+              }}>
               <Image
                 src={Logo}
                 height={30}
@@ -112,8 +117,12 @@ export default function RegularLayout({
               onClick={(info) => {
                 if (info.key === 'logout') {
                   handleLogout();
+                } else if (info.key === 'history') {
+                  setSelectedMenuItem(info.key)
+                  router.push('/start/history')
                 }
               }}
+              selectedKeys={[selectedMenuItem]}
             />
           </Sider>
           <Layout

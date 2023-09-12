@@ -7,6 +7,7 @@ import { MenuProps } from 'antd';
 
 export default function Dashboard() {
   const [profession, setProfession] = useState('Software Engineer');
+  const [numberQuestions, setNumberQuestions] = useState(1);
 
   const handleMenuClick: MenuProps['onClick'] = (e) => {
     setProfession(e.key);
@@ -60,8 +61,6 @@ export default function Dashboard() {
     ],
     onClick: handleNumberClick,
   };
-
-  const [numberQuestions, setNumberQuestions] = useState(1);
 
   return (
     <div className="lg:max-w-screen-lg lg:mx-auto flex flex-col w-full mt-8 gap-16 lg:gap-36">
