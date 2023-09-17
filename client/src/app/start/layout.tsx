@@ -2,12 +2,11 @@
 
 import '../globals.css';
 import React, { useEffect, useState } from 'react';
-import Image from 'next/image';
 import { Layout, Menu, MenuProps } from 'antd';
 const { Footer, Sider } = Layout;
 import { Suspense } from 'react';
 import Loading from './loading';
-import Logo from '../public/images/LogoV2.png';
+import Image from 'next/image';
 import {
   ClockCircleOutlined,
   UserOutlined,
@@ -15,8 +14,9 @@ import {
   LogoutOutlined,
 } from '@ant-design/icons';
 import axios from 'axios';
-import { useRouter, usePathname } from 'next/navigation';
-import {User} from '../utils/interfaces'
+import { useRouter } from 'next/navigation';
+import { User } from '../utils/interfaces';
+import Logo from '../../../public/images/LogoV2.png';
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -44,14 +44,13 @@ export default function RegularLayout({
   children: React.ReactNode;
 }) {
   const [user, setUser] = useState<User>({
-    email: "",
-    username: "",
+    email: '',
+    username: '',
     _v: 0,
-    _id: ""
+    _id: '',
   });
-  const [selectedMenuItem, setSelectedMenuItem] = useState("");
+  const [selectedMenuItem, setSelectedMenuItem] = useState('');
   const router = useRouter();
-  const path = usePathname();
 
   const handleLogout = () => {
     axios
@@ -98,10 +97,13 @@ export default function RegularLayout({
             breakpoint="sm"
             collapsedWidth={0}
           >
-            <div className="flex gap-2 justify-center items-center w-11/12 mx-auto rounded-md mt-5 mb-5 cursor-pointer" onClick={() => {
-              setSelectedMenuItem("");
-              router.push('/start/dashboard')
-              }}>
+            <div
+              className="flex gap-2 justify-center items-center w-11/12 mx-auto rounded-md mt-5 mb-5 cursor-pointer"
+              onClick={() => {
+                setSelectedMenuItem('');
+                router.push('/start/dashboard');
+              }}
+            >
               <Image
                 src={Logo}
                 height={30}
@@ -118,8 +120,8 @@ export default function RegularLayout({
                 if (info.key === 'logout') {
                   handleLogout();
                 } else if (info.key === 'history') {
-                  setSelectedMenuItem(info.key)
-                  router.push('/start/history')
+                  setSelectedMenuItem(info.key);
+                  router.push('/start/history');
                 }
               }}
               selectedKeys={[selectedMenuItem]}
@@ -130,10 +132,8 @@ export default function RegularLayout({
             style={{ background: 'white' }}
           >
             <div className="row-span-9">
-              <Suspense fallback={<Loading />}>
-                {children}
-              </Suspense>
-              </div>
+              <Suspense fallback={<Loading />}>{children}</Suspense>
+            </div>
             <Footer
               className="row-span-1 flex items-center justify-center"
               style={{ textAlign: 'center' }}

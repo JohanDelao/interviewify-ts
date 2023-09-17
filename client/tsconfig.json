@@ -30,10 +30,11 @@
   },
   "include": [
     "client/next-env.d.ts",
+    "client/react-app-env.d.ts",
     "**/*.ts",
     "**/*.client/.next/types/**/*.ts**/*.ts",
     ".next/types/**/*.ts",
-    "public/images/**/*.ts"
+    "public/images/**/*.png"
   ],
   "exclude": [
     "node_modules"
