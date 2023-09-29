@@ -4,10 +4,13 @@ import React from 'react';
 import { Button, Dropdown, Space } from 'antd';
 import { DownOutlined, UserOutlined } from '@ant-design/icons';
 import { MenuProps } from 'antd';
+import { useRouter } from 'next/navigation';
+import { ProfessionType } from '@/app/interfaces';
 
 export default function Dashboard() {
   const [profession, setProfession] = useState('Software Engineer');
   const [numberQuestions, setNumberQuestions] = useState(1);
+  const router = useRouter();
 
   const handleMenuClick: MenuProps['onClick'] = (e) => {
     setProfession(e.key);
@@ -17,19 +20,25 @@ export default function Dashboard() {
     setNumberQuestions(parseInt(e.key));
   };
 
+  const startInterview = () => {
+    router.push(
+      `/start/interview?profession=${profession}&numberQs=${numberQuestions}`,
+    );
+  };
+
   const items: MenuProps['items'] = [
     {
-      label: 'Software Engineer',
+      label: ProfessionType.SOFTWARE_ENGINEER,
       key: 'Software Engineer',
       icon: <UserOutlined />,
     },
     {
-      label: 'Data Scientist',
+      label: ProfessionType.DATA_SCIENTIST,
       key: 'Data Scientist',
       icon: <UserOutlined />,
     },
     {
-      label: 'Product Manager',
+      label: ProfessionType.PRODUCT_MANAGER,
       key: 'Product Manager',
       icon: <UserOutlined />,
     },
@@ -96,7 +105,10 @@ export default function Dashboard() {
             </Dropdown>
           </div>
           <div className="flex md:col-span-3 justify-center">
-            <Button className="h-10 w-52 md:w-36 lg:w-52 bg-[#3772FF] rounded-md text-white text-base font-medium">
+            <Button
+              className="h-10 w-52 md:w-36 lg:w-52 bg-[#3772FF] rounded-md text-white text-base font-medium"
+              onClick={() => startInterview()}
+            >
               Begin Interview
             </Button>
           </div>
