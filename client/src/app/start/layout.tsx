@@ -90,6 +90,9 @@ export default function RegularLayout({
           },
         );
         setUser(res.data.user);
+        if (!res.data.user) {
+          router.push('/welcome');
+        }
       } catch (error) {
         console.log(error);
       }
