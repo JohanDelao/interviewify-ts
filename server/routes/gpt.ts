@@ -6,36 +6,49 @@ import dotenv from "dotenv";
 dotenv.config()
 
 import { OpenAI } from "openai";
+import { Transcriptions } from 'openai/resources/audio';
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
 });
 
-router.post("/transcribe", async (req, res) => {
-  const audioFile = fs.createReadStream('./audios/2min.mp3');
-  await openai.audio.transcriptions.create({
-    file: audioFile,
-    model: "whisper-1"
-  })
-  .then((response: any) => {
-    res.status(200).json(response.text)
-  })
-  .catch(err => res.status(400).send({ error: `❌ Transcription error: ${err}` }))
-})
+// router.post("/transcribe", async (req, res) => {
+//   const audioFile = fs.createReadStream('./audios/2min.mp3');
+//   await openai.audio.transcriptions.create({
+//     file: audioFile,
+//     model: "whisper-1"
+//   })
+//   .then((response: any) => {
+//     res.status(200).json(response.text)
+//   })
+//   .catch(err => res.status(400).send({ error: `❌ Transcription error: ${err}` }))
+// })
 
 router.post("/evaluate", async (req, res) => {
-  const exampleTranscript = {
-    "question": `Tell me about a time when you worked on a group project and had to deal 
-      with a conflict. How did you resolve it? What was the end result?`,
-    "answer": `During a group project, we had a conflict regarding task distribution and 
-      a disengaged team member. I talked openly, listened to their concerns, and provided 
-      support. We rearranged tasks, communicated openly, and helped each other. As a result, 
-      the team member became more engaged, delivered quality work, and we successfully 
-      completed the project. This experience taught me the importance of empathy, 
-      communication, and collaboration in resolving team conflicts.`
-  }
+  // TODO: figure out if we want to error out when these are empty or 
+  // coallese to empty array and still make the gpt call 
 
+  // TODO: throw transcription, making userMessages, and systemMessage into utils files
+
+  const questions = req.body.questions ?? [];
+  const audios = req.body.audios ?? [];
   const role = req.body.role ?? "software engineering"
 
+  let transcriptions = transcribe(audios);
+
+  let userMessages = []
+  for (let i = 0; i < questions.length; i++) {
+    let content = {
+      "question": questions[i],
+      "answer": transcriptions[i]
+    }
+    let msg = {
+      "role": "user",
+      "content": JSON.stringify(content)
+    }
+    userMessages.push(msg)
+  }
+
+  
   const systemMessage: { role: "function" | "system" | "user" | "assistant", content: string } = {
     "role": "system",
     "content": `You are an AI career coach that will help users with role: ${role}
@@ -59,17 +72,30 @@ router.post("/evaluate", async (req, res) => {
     - The clarity of the answer`
   }
 
-  const userMessage: { role: "function" | "system" | "user" | "assistant", content: string } = {
-    "role": "user",
-    "content": JSON.stringify(exampleTranscript)
-  }
   await openai.chat.completions.create({
-    messages: [systemMessage, userMessage],
+    messages: [systemMessage, ...userMessages],
     model: "gpt-4",
   }).then((response) => {
+    // TODO: this is where we parse then send back to frontend for feedback page and send to mongodb
     res.status(200).json(response.choices[0]);
   })
     .catch(err => res.status(400).send({ error: `❌ Evaluation error: ${err}` }))
 })
+
+async function transcribe(audios: Array<string>) {
+  let transcriptions = [];
+  for (const audio in audios) {
+    const audioFile = fs.createReadStream('./audios/2min.mp3');
+    await openai.audio.transcriptions.create({
+      file: audioFile,
+      model: "whisper-1"
+    })
+    .then((response: any) => {
+      transcriptions.push(response.text);
+    })
+    .catch(err => console.log(`❌ Transcription error: ${err}`)) // TODO: handle error
+  }
+  return transcriptions;
+}
 
 export default router
