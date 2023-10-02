@@ -13,7 +13,7 @@ import {
   ExclamationCircleOutlined,
   LogoutOutlined,
 } from '@ant-design/icons';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { usePathname, useRouter } from 'next/navigation';
 import { User } from '../interfaces';
 import Logo from '../../../public/images/LogoV2.png';
@@ -35,8 +35,6 @@ function getItem(
     type,
   } as MenuItem;
 }
-
-// const user = 'johandelao10@gmail.com';
 
 export default function RegularLayout({
   children,
@@ -93,8 +91,11 @@ export default function RegularLayout({
         if (!res.data.user) {
           router.push('/welcome');
         }
-      } catch (error) {
+      } catch (error: AxiosError | any) {
         console.log(error);
+        if(error.response.statusText === 'Unauthorized'){
+          router.push('/welcome');
+        }
       }
     };
 
