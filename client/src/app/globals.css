@@ -21,3 +21,6 @@ body {
 .SideBarMenu :hover{
     color: white !important;
 }
+/* button, [type='button'], [type='reset'], [type='submit'] {
+    background-color: #1677ff !important;
+} */

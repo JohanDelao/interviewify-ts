@@ -2,7 +2,7 @@
 
 import '../globals.css';
 import React, { useEffect, useState } from 'react';
-import { Layout, Menu, MenuProps } from 'antd';
+import { Layout, Menu, MenuProps, Modal } from 'antd';
 const { Footer, Sider } = Layout;
 import { Suspense } from 'react';
 import Loading from './loading';
@@ -14,8 +14,8 @@ import {
   LogoutOutlined,
 } from '@ant-design/icons';
 import axios from 'axios';
-import { useRouter } from 'next/navigation';
-import { User } from '../utils/interfaces';
+import { usePathname, useRouter } from 'next/navigation';
+import { User } from '../interfaces';
 import Logo from '../../../public/images/LogoV2.png';
 
 type MenuItem = Required<MenuProps>['items'][number];
@@ -50,7 +50,27 @@ export default function RegularLayout({
     _id: '',
   });
   const [selectedMenuItem, setSelectedMenuItem] = useState('');
+  const [movingToo, setMovingToo] = useState<string | null>('');
   const router = useRouter();
+  const path = usePathname();
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const showModal = (path: string) => {
+    setIsModalOpen(true);
+    setMovingToo(path);
+  };
+
+  const handleOk = () => {
+    if (movingToo) {
+      setIsModalOpen(false);
+      router.push(movingToo);
+    }
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
 
   const handleLogout = () => {
     axios
@@ -70,6 +90,9 @@ export default function RegularLayout({
           },
         );
         setUser(res.data.user);
+        if (!res.data.user) {
+          router.push('/welcome');
+        }
       } catch (error) {
         console.log(error);
       }
@@ -101,7 +124,11 @@ export default function RegularLayout({
               className="flex gap-2 justify-center items-center w-11/12 mx-auto rounded-md mt-5 mb-5 cursor-pointer"
               onClick={() => {
                 setSelectedMenuItem('');
-                router.push('/start/dashboard');
+                if (path.includes('interview')) {
+                  showModal('/start/dashboard');
+                } else {
+                  router.push('/start/dashboard');
+                }
               }}
             >
               <Image
@@ -121,7 +148,11 @@ export default function RegularLayout({
                   handleLogout();
                 } else if (info.key === 'history') {
                   setSelectedMenuItem(info.key);
-                  router.push('/start/history');
+                  if (path.includes('interview')) {
+                    showModal('/start/history');
+                  } else {
+                    router.push('/start/history');
+                  }
                 }
               }}
               selectedKeys={[selectedMenuItem]}
@@ -131,7 +162,7 @@ export default function RegularLayout({
             className="site-layout min-h-screen grid grid-rows-10"
             style={{ background: 'white' }}
           >
-            <div className="row-span-9">
+            <div className="row-span-9 h-full">
               <Suspense fallback={<Loading />}>{children}</Suspense>
             </div>
             <Footer
@@ -156,6 +187,16 @@ export default function RegularLayout({
           </Layout>
         </Layout>
       </div>
+      <Modal
+        title="Are you sure you want to end your interview?"
+        open={isModalOpen}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        cancelText={'Go Back'}
+        okType="default"
+      >
+        <p>Youre progress will not be saved!</p>
+      </Modal>
     </Suspense>
   );
 }
