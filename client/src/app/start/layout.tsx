@@ -15,6 +15,7 @@ import {
 } from '@ant-design/icons';
 import axios, { AxiosError } from 'axios';
 import { usePathname, useRouter } from 'next/navigation';
+import CustomFooter from '../components/footer';
 import { User } from '../interfaces';
 import Logo from '../../../public/images/LogoV2.png';
 
@@ -166,25 +167,7 @@ export default function RegularLayout({
             <div className="row-span-9 h-full">
               <Suspense fallback={<Loading />}>{children}</Suspense>
             </div>
-            <Footer
-              className="row-span-1 flex items-center justify-center"
-              style={{ textAlign: 'center' }}
-            >
-              Interviewify ©2023 Created by{' '}
-              <a
-                href="https://www.linkedin.com/in/johandelao/"
-                className="px-1"
-              >
-                Johan Delao
-              </a>{' '}
-              &{' '}
-              <a
-                href="https://www.linkedin.com/in/abdul-andha/"
-                className="px-1"
-              >
-                Abdul Andha
-              </a>
-            </Footer>
+            <CustomFooter />
           </Layout>
         </Layout>
       </div>

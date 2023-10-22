@@ -10,7 +10,9 @@ export default function History() {
         <p className="text-2xl font-bold">History</p>
       </div>
       <div className="flex flex-col gap-2 mx-auto px-4 md:px-0 md:w-11/12 w-10/12">
-        Nothing
+        {previousInterviews.length === 0 ? <p>You have no history of interviews, schedule one today!</p> : previousInterviews.map((interview) => {
+          return <div>{interview}</div>
+        })}
       </div>
     </div>
   );
