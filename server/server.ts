@@ -1,3 +1,4 @@
+// TODO: clean up imports 
 import express from "express"
 import cors from "cors"
 import mongoose, { mongo } from "mongoose"
@@ -6,13 +7,6 @@ import morgan from "morgan"
 import passport from "passport"
 import session from "express-session"
 
-// const cors = require('cors');
-// const mongoose = require('mongoose');
-// const helmet = require('helmet');
-// const morgan = require('morgan');
-// // const session = require("express-session");
-// const passport = require("passport");
-// require('./passport')
 import './passport'
 
 //setup routes
