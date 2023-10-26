@@ -93,7 +93,7 @@ export default function RegularLayout({
         }
       } catch (error: AxiosError | any) {
         console.log(error);
-        if(error.response.statusText === 'Unauthorized'){
+        if(error){
           router.push('/welcome');
         }
       }
@@ -196,7 +196,7 @@ export default function RegularLayout({
         cancelText={'Go Back'}
         okType="default"
       >
-        <p>Youre progress will not be saved!</p>
+        <p>Your progress will not be saved!</p>
       </Modal>
     </Suspense>
   );
