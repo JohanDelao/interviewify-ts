@@ -1,12 +1,17 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import GetQuestions from '@/app/utils/get-questions';
 import { useRouter, useSearchParams } from 'next/navigation';
 import getProfessionType from '@/app/utils/get-profession-type';
 import Card from 'antd/es/card/Card';
 import { AudioOutlined, AudioMutedOutlined } from '@ant-design/icons';
 import { Button, Progress, Modal } from 'antd';
-import CountDownTimer from '../../components/countdownTimer'
+
+declare global {
+  interface Window {
+    webkitSpeechRecognition: any;
+  }
+}
 
 export default function Interview() {
   const params = useSearchParams();
@@ -17,13 +22,16 @@ export default function Interview() {
   );
   
   // Code to keep track of question location
-  const [questionIndex, setQuestionIndex] = useState(0);
+  const [questionIndex, setQuestionIndex] = useState<number>(0);
   const [questions, setQuestions] = useState<string[]>([]);
   const nextQuestion = () => {
-    setTime(120);
+    if(recognitionRef.current){
+      recognitionRef.current.stop();
+    }
+    console.log(transcript);
+    setTime(30);
     setStarted(false);
     timer('end');
-    setTimeUp(false);
     if (questionIndex >= questions.length - 1) {
       // make a function that ends the interview, leads to result screen
       router.push('/start/feedback');
@@ -32,13 +40,30 @@ export default function Interview() {
     }
   };
 
+  const restartQuestion = () => {
+    setTime(30);
+    setStarted(false);
+    timer('end');
+  }
+
   // Code for Timer
-  const [started, setStarted] = useState(false);
-  const [time, setTime] = useState(30);
+  const [started, setStarted] = useState<boolean>(false);
+  const [time, setTime] = useState<number>(30);
   const [intervalID, setIntervalID] = useState<NodeJS.Timeout | null>(null);
   const startResponse = () => {
     setStarted(true);
     timer('start');
+    recognitionRef.current = new window.webkitSpeechRecognition();
+    recognitionRef.current.continuous = true;
+    recognitionRef.current.interimResults = true;
+
+    recognitionRef.current.onresult = (event:any) => {
+      const {transcript} = event.results[event.results.length - 1][0];
+      console.log(transcript)
+      console.log(event)
+      // setTranscript((prevTranscript) => prevTranscript + ' ' + transcript);
+    }
+    recognitionRef.current.start();
   }
   const timer = (action: string) => {
     if(action === 'start'){
@@ -46,7 +71,7 @@ export default function Interview() {
         if(time > 0){
             setTime((prevTime) => prevTime - 1);
         } else {
-            setTimeUp(true);
+            // setTimeUp(true);
             clearInterval(intId);
         }
       }, 1000);
@@ -68,15 +93,21 @@ export default function Interview() {
     }
 }
   
-  const [muted, setMuted] = useState(false);
-  const [timeUp, setTimeUp] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const [muted, setMuted] = useState<boolean>(false);
+  const [transcript, setTranscript] = useState<string>('');
+  const recognitionRef = useRef<any>(null);
+  
+  
   useEffect(() => {
     const questions = GetQuestions(profession ? profession : undefined, numQs);
     setQuestions(questions);
     setStarted(false);
-    setTime(120);
+    setTime(30);
+    return () => {
+      if(recognitionRef.current){
+        recognitionRef.current.stop();
+      }
+    }
   }, []);
 
   const CardTitleUI = () => {
@@ -119,7 +150,7 @@ export default function Interview() {
   };
 
   const handleCancel = () => {
-    setIsModalOpen(false);
+    restartQuestion();
   };
 
   return (
@@ -137,7 +168,7 @@ export default function Interview() {
           <Progress type='circle' percent={Math.floor(time/120 * 100)} format={() => `${timeConvert(Math.floor(time / 60))}:${timeConvert(time % 60)}`} size={'small'} />
         </div>
       </Card>
-      <Modal title="Time ran out" open={time <= 0} onOk={handleOk} onCancel={handleCancel} okType='default'>
+      <Modal title="Time ran out" open={time <= 0} onOk={handleOk} onCancel={handleCancel} okType='default' okText='Submit' cancelText='Restart'>
         <p>For behavorial interviews, you want to make your answer short and concise, therefore we have a two-minute time limit for each response. Feel free to restart your response or submit your current one!</p>
       </Modal>
     </div>
