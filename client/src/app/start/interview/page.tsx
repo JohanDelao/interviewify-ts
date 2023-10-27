@@ -55,13 +55,12 @@ export default function Interview() {
     timer('start');
     recognitionRef.current = new window.webkitSpeechRecognition();
     recognitionRef.current.continuous = true;
-    recognitionRef.current.interimResults = true;
+    recognitionRef.current.interimResults = false;
 
-    recognitionRef.current.onresult = (event:any) => {
-      const {transcript} = event.results[event.results.length - 1][0];
-      console.log(transcript)
-      console.log(event)
-      // setTranscript((prevTranscript) => prevTranscript + ' ' + transcript);
+    recognitionRef.current.onresult = (event: any) => {
+      // TODO: Get the most accurate piece of text from transcript
+      const list: SpeechRecognitionResultList = event.results;
+      setTranscript(list);
     }
     recognitionRef.current.start();
   }
@@ -71,7 +70,6 @@ export default function Interview() {
         if(time > 0){
             setTime((prevTime) => prevTime - 1);
         } else {
-            // setTimeUp(true);
             clearInterval(intId);
         }
       }, 1000);
@@ -94,7 +92,7 @@ export default function Interview() {
 }
   
   const [muted, setMuted] = useState<boolean>(false);
-  const [transcript, setTranscript] = useState<string>('');
+  const [transcript, setTranscript] = useState<SpeechRecognitionResultList | null>(null);
   const recognitionRef = useRef<any>(null);
   
   
