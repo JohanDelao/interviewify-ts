@@ -1,17 +1,12 @@
 'use client';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import GetQuestions from '@/app/utils/get-questions';
 import { useRouter, useSearchParams } from 'next/navigation';
 import getProfessionType from '@/app/utils/get-profession-type';
 import Card from 'antd/es/card/Card';
 import { AudioOutlined, AudioMutedOutlined } from '@ant-design/icons';
 import { Button, Progress, Modal } from 'antd';
-
-declare global {
-  interface Window {
-    webkitSpeechRecognition: any;
-  }
-}
+import { ReactMic } from 'react-mic';
 
 export default function Interview() {
   const params = useSearchParams();
@@ -25,10 +20,6 @@ export default function Interview() {
   const [questionIndex, setQuestionIndex] = useState<number>(0);
   const [questions, setQuestions] = useState<string[]>([]);
   const nextQuestion = () => {
-    if(recognitionRef.current){
-      recognitionRef.current.stop();
-    }
-    console.log(transcript);
     setTime(30);
     setStarted(false);
     timer('end');
@@ -53,16 +44,6 @@ export default function Interview() {
   const startResponse = () => {
     setStarted(true);
     timer('start');
-    recognitionRef.current = new window.webkitSpeechRecognition();
-    recognitionRef.current.continuous = true;
-    recognitionRef.current.interimResults = false;
-
-    recognitionRef.current.onresult = (event: any) => {
-      // TODO: Get the most accurate piece of text from transcript
-      const list: SpeechRecognitionResultList = event.results;
-      setTranscript(list);
-    }
-    recognitionRef.current.start();
   }
   const timer = (action: string) => {
     if(action === 'start'){
@@ -92,36 +73,43 @@ export default function Interview() {
 }
   
   const [muted, setMuted] = useState<boolean>(false);
-  const [transcript, setTranscript] = useState<SpeechRecognitionResultList | null>(null);
-  const recognitionRef = useRef<any>(null);
   
+  function handleAudio(recordedBlob: any){
+    console.log('recordedBlob is: ', recordedBlob);
+  }
+
+  function handleData(recordedBlob: any) {
+    console.log('chunk of real-time data is: ', recordedBlob);
+  }
   
   useEffect(() => {
     const questions = GetQuestions(profession ? profession : undefined, numQs);
     setQuestions(questions);
     setStarted(false);
     setTime(30);
-    return () => {
-      if(recognitionRef.current){
-        recognitionRef.current.stop();
-      }
-    }
   }, []);
 
   const CardTitleUI = () => {
     return (
       <div className="flex justify-between">
-        <div>
-          <p>
+        <div className='flex justify-center items-center'>
+          <p className='w-fit h-fit'>
             Question {questionIndex + 1} of {numQs}
           </p>
         </div>
-        <div className="flex">
+        <div className="flex flex-row-reverse justify-between items-center gap-5">
           {!muted ? (
-            <AudioOutlined onClick={() => setMuted(!muted)} />
+            <AudioOutlined className='text-lg font-bold text-[#1677ff]' onClick={() => setMuted(!muted)} />
           ) : (
-            <AudioMutedOutlined onClick={() => setMuted(!muted)} />
+            <AudioMutedOutlined className='text-lg font-bold text-[#1677ff]' onClick={() => setMuted(!muted)} />
           )}
+          <ReactMic
+          record={started}
+          className="w-72 h-11"
+          visualSetting='sinewave'
+          onStop={handleAudio}
+          strokeColor="#1677ff"
+          backgroundColor="#FFF" />
         </div>
       </div>
     );
