@@ -1,8 +1,13 @@
 import mongoose from 'mongoose';
 import passportLocalMongoose from "passport-local-mongoose";
 import findOrCreate from "mongoose-findorcreate";
+const Schema = mongoose.Schema;
 
-const userSchema = new mongoose.Schema({
+const userSchema = new Schema({
+  _id: {
+    type: Schema.Types.ObjectId,
+    required: true
+  },
   username: {
     type: String,
     required: true,
@@ -13,9 +18,10 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true
   },
-  _id: {
-    type: String
-  }
+  created_at: {
+    type: Date,
+    default: Date.now,
+  },
 })
 userSchema.plugin(passportLocalMongoose);
 userSchema.plugin(findOrCreate);
