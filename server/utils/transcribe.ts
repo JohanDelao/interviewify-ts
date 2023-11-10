@@ -6,11 +6,11 @@ const openai = new OpenAI({
 });
 
 export async function transcribe(
-  audios: Array<string>
+  audioURLs: Array<string>
 ): Promise<Array<string>> {
   let transcriptions = [];
-  for (const audio in audios) {
-    const audioFile = fs.createReadStream('./audios/2min.mp3');
+  for (const url in audioURLs) {
+    const audioFile = fs.createReadStream(url);
     await openai.audio.transcriptions
       .create({
         file: audioFile,
