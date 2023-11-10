@@ -17,17 +17,18 @@ const openai = new OpenAI({
 });
 
 router.post('/evaluate', async (req, res) => {
-  // TODO: remove this when we have real audio files coming in
-  const audioFile = fs.createReadStream('./audios/2min.mp3');
-
   // TODO: figure out if we want to error out when these are empty or
   // coallese to empty array and still make the gpt call
   const questions = req.body.questions ?? [];
-  const audios = req.body.audios ?? [audioFile, audioFile];
+  const audioURLs = req.body.audios ?? [
+    './audios/2min.mp3',
+    './audios/2min.mp3',
+  ];
+  console.log(audioURLs);
   const profession = req.body.profession ?? 'software engineering';
 
   const systemPrompt = getSystemPrompt(profession);
-  const transcriptions = await transcribe(audios);
+  const transcriptions = await transcribe(audioURLs);
   const userAnswers = audioToPrompt(transcriptions, questions);
 
   await openai.chat.completions
