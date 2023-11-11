@@ -7,6 +7,7 @@ import Card from 'antd/es/card/Card';
 import { AudioOutlined, AudioMutedOutlined } from '@ant-design/icons';
 import { Button, Progress, Modal } from 'antd';
 import { ReactMic } from 'react-mic';
+import axios from 'axios';
 
 export default function Interview() {
   const params = useSearchParams();
@@ -15,7 +16,7 @@ export default function Interview() {
   const numQs = parseInt(
     params.get('numberQs') ? String(params.get('numberQs')) : '0',
   );
-  
+
   // Code to keep track of question location
   const [questionIndex, setQuestionIndex] = useState<number>(0);
   const [questions, setQuestions] = useState<string[]>([]);
@@ -24,18 +25,29 @@ export default function Interview() {
     setStarted(false);
     timer('end');
     if (questionIndex >= questions.length - 1) {
-      // make a function that ends the interview, leads to result screen
-      router.push('/start/feedback');
+      evaluate();
     } else {
       setQuestionIndex(questionIndex + 1);
     }
+  };
+
+  // TODO: Need to discuss ways to handle sending request -> redirect to new page -> receiving info
+  const evaluate = async () => {
+    console.log(blobURLs);
+    const resp = await axios.post('http://localhost:4000/gpt/evaluate', {
+      questions: questions,
+      audios: blobURLs,
+      profession: profession,
+    });
+    console.log(resp);
+    router.push('/start/feedback');
   };
 
   const restartQuestion = () => {
     setTime(30);
     setStarted(false);
     timer('end');
-  }
+  };
 
   // Code for Timer
   const [started, setStarted] = useState<boolean>(false);
@@ -44,44 +56,46 @@ export default function Interview() {
   const startResponse = () => {
     setStarted(true);
     timer('start');
-  }
+  };
   const timer = (action: string) => {
-    if(action === 'start'){
+    if (action === 'start') {
       const intId = setInterval(() => {
-        if(time > 0){
-            setTime((prevTime) => prevTime - 1);
+        if (time > 0) {
+          setTime((prevTime) => prevTime - 1);
         } else {
-            clearInterval(intId);
+          clearInterval(intId);
         }
       }, 1000);
-      setIntervalID(intId)
+      setIntervalID(intId);
     } else if (action === 'end') {
-      if(intervalID !== null){
+      if (intervalID !== null) {
         clearInterval(intervalID);
       }
     }
-  }
+  };
   const timeConvert = (time: number) => {
-    if (time < 0){
-        return '00';
+    if (time < 0) {
+      return '00';
     }
-    if(time < 10){
-        return '0' + String(time);
+    if (time < 10) {
+      return '0' + String(time);
     } else {
-        return String(time)
+      return String(time);
     }
-}
-  
+  };
+
   const [muted, setMuted] = useState<boolean>(false);
-  
-  function handleAudio(recordedBlob: any){
-    console.log('recordedBlob is: ', recordedBlob);
+
+  const [blobURLs, setBlobURLs] = useState<string[]>([]);
+  async function handleAudio(recordedBlob: any) {
+    setBlobURLs((prev) => [...prev, recordedBlob.blobURL]);
+    console.log('updated: ', blobURLs, recordedBlob.blobURL);
   }
 
   function handleData(recordedBlob: any) {
     console.log('chunk of real-time data is: ', recordedBlob);
   }
-  
+
   useEffect(() => {
     const questions = GetQuestions(profession ? profession : undefined, numQs);
     setQuestions(questions);
@@ -92,24 +106,31 @@ export default function Interview() {
   const CardTitleUI = () => {
     return (
       <div className="flex justify-between">
-        <div className='flex justify-center items-center'>
-          <p className='w-fit h-fit'>
+        <div className="flex justify-center items-center">
+          <p className="w-fit h-fit">
             Question {questionIndex + 1} of {numQs}
           </p>
         </div>
         <div className="flex flex-row-reverse justify-between items-center gap-5">
           {!muted ? (
-            <AudioOutlined className='text-lg font-bold text-[#1677ff]' onClick={() => setMuted(!muted)} />
+            <AudioOutlined
+              className="text-lg font-bold text-[#1677ff]"
+              onClick={() => setMuted(!muted)}
+            />
           ) : (
-            <AudioMutedOutlined className='text-lg font-bold text-[#1677ff]' onClick={() => setMuted(!muted)} />
+            <AudioMutedOutlined
+              className="text-lg font-bold text-[#1677ff]"
+              onClick={() => setMuted(!muted)}
+            />
           )}
           <ReactMic
-          record={started}
-          className="w-72 h-11"
-          visualSetting='sinewave'
-          onStop={handleAudio}
-          strokeColor="#1677ff"
-          backgroundColor="#FFF" />
+            record={started}
+            className="w-72 h-11"
+            visualSetting="sinewave"
+            onStop={handleAudio}
+            strokeColor="#1677ff"
+            backgroundColor="#FFF"
+          />
         </div>
       </div>
     );
@@ -120,16 +141,16 @@ export default function Interview() {
       <Button onClick={nextQuestion} size="middle" className="w-44">
         Submit Response
       </Button>
-    )
-  }
+    );
+  };
 
   const StartButton = () => {
     return (
       <Button onClick={startResponse} size="middle" className="w-44">
         Start Response
       </Button>
-    )
-  }
+    );
+  };
 
   const handleOk = () => {
     nextQuestion();
@@ -142,20 +163,39 @@ export default function Interview() {
   return (
     <div className="lg:max-w-screen-lg lg:mx-auto lg:justify-normal flex flex-col w-full mt-8 gap-16 lg:gap-36 h-full justify-center">
       <Card title={CardTitleUI()}>
-        <div className='flex justify-between'>
-          <div className='flex flex-col gap-5'>
+        <div className="flex justify-between">
+          <div className="flex flex-col gap-5">
             <div>
-              <div>{questions[questionIndex]}</div>     
+              <div>{questions[questionIndex]}</div>
             </div>
-            <div className='flex justify-between items-center'>
+            <div className="flex justify-between items-center">
               {started ? SubmitButton() : StartButton()}
             </div>
           </div>
-          <Progress type='circle' percent={Math.floor(time/120 * 100)} format={() => `${timeConvert(Math.floor(time / 60))}:${timeConvert(time % 60)}`} size={'small'} />
+          <Progress
+            type="circle"
+            percent={Math.floor((time / 120) * 100)}
+            format={() =>
+              `${timeConvert(Math.floor(time / 60))}:${timeConvert(time % 60)}`
+            }
+            size={'small'}
+          />
         </div>
       </Card>
-      <Modal title="Time ran out" open={time <= 0} onOk={handleOk} onCancel={handleCancel} okType='default' okText='Submit' cancelText='Restart'>
-        <p>For behavorial interviews, you want to make your answer short and concise, therefore we have a two-minute time limit for each response. Feel free to restart your response or submit your current one!</p>
+      <Modal
+        title="Time ran out"
+        open={time <= 0}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        okType="default"
+        okText="Submit"
+        cancelText="Restart"
+      >
+        <p>
+          For behavorial interviews, you want to make your answer short and
+          concise, therefore we have a two-minute time limit for each response.
+          Feel free to restart your response or submit your current one!
+        </p>
       </Modal>
     </div>
   );
