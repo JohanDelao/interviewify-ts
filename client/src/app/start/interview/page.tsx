@@ -86,10 +86,12 @@ export default function Interview() {
 
   const [muted, setMuted] = useState<boolean>(false);
 
-  const [blobURLs, setBlobURLs] = useState<string[]>([]);
-  async function handleAudio(recordedBlob: any) {
-    setBlobURLs((prev) => [...prev, recordedBlob.blobURL]);
-    console.log('updated: ', blobURLs, recordedBlob.blobURL);
+  const [blobURLs, setBlobURLs] = useState<any[]>([]);
+  function handleAudio(recordedBlob: any) {
+    // console.log(recordedBlob);
+    setBlobURLs(prevBlobURLs => [...prevBlobURLs, recordedBlob.blobURL]);
+    // console.log(blobURLs)
+    // console.log('updated: ', blobURLs, recordedBlob.blobURL);
   }
 
   function handleData(recordedBlob: any) {
@@ -102,6 +104,11 @@ export default function Interview() {
     setStarted(false);
     setTime(30);
   }, []);
+
+  // to see when blob urls gets updated
+  useEffect(() => {
+    console.log('Updated Blob URLs:', blobURLs);
+  }, [blobURLs]);
 
   const CardTitleUI = () => {
     return (
