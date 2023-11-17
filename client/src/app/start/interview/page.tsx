@@ -33,12 +33,25 @@ export default function Interview() {
 
   // TODO: Need to discuss ways to handle sending request -> redirect to new page -> receiving info
   const evaluate = async () => {
-    console.log(blobURLs);
-    const resp = await axios.post('http://localhost:4000/gpt/evaluate', {
-      questions: questions,
-      audios: blobURLs,
-      profession: profession,
+    const formData = new FormData();
+
+    questions.forEach((question) => {
+      formData.append(`questions`, question);
     });
+    formData.append('profession', profession as string);
+    blobs.forEach((blob) => {
+      formData.append(`audios`, blob);
+    });
+
+    const resp = await axios.post(
+      'http://localhost:4000/gpt/evaluate',
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      },
+    );
     console.log(resp);
     router.push('/start/feedback');
   };
@@ -86,12 +99,9 @@ export default function Interview() {
 
   const [muted, setMuted] = useState<boolean>(false);
 
-  const [blobURLs, setBlobURLs] = useState<any[]>([]);
+  const [blobs, setBlobs] = useState<any[]>([]);
   function handleAudio(recordedBlob: any) {
-    // console.log(recordedBlob);
-    setBlobURLs(prevBlobURLs => [...prevBlobURLs, recordedBlob.blobURL]);
-    // console.log(blobURLs)
-    // console.log('updated: ', blobURLs, recordedBlob.blobURL);
+    setBlobs((prevBlobs) => [...prevBlobs, recordedBlob.blob]);
   }
 
   function handleData(recordedBlob: any) {
@@ -107,8 +117,8 @@ export default function Interview() {
 
   // to see when blob urls gets updated
   useEffect(() => {
-    console.log('Updated Blob URLs:', blobURLs);
-  }, [blobURLs]);
+    console.log('Updated Blob URLs:', blobs);
+  }, [blobs]);
 
   const CardTitleUI = () => {
     return (
