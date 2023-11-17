@@ -1,16 +1,14 @@
-import { OpenAI } from 'openai';
-import fs from 'fs';
+import { OpenAI, toFile } from 'openai';
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-export async function transcribe(
-  audioURLs: Array<string>
-): Promise<Array<string>> {
+export async function transcribe(audios: any[]): Promise<Array<string>> {
   let transcriptions = [];
-  for (const url in audioURLs) {
-    const audioFile = fs.createReadStream(url);
+
+  for (const audio of audios) {
+    const audioFile = await toFile(audio.buffer, 'audio.webm');
     await openai.audio.transcriptions
       .create({
         file: audioFile,
