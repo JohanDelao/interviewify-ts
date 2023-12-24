@@ -4,6 +4,37 @@
 @tailwind utilities;
 
 @import './styles/loading.css';
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap');
+
+:root {
+    --scrollbar-width: 0px;
+    --angleNormal: -6deg;
+    --angleStrong: -12deg;
+    --angleNormalSin: 0.106;
+    --angleStrongSin: 0.212;
+
+    --sectionPaddingTop: 116px;
+
+    --layoutWidth: 1024px;
+    --gutterWidth: calc(var(--screenWidth)/2 - var(--layoutWidth)/2);
+
+    /* the larger the rem, the more the 'height' of the gradient decreases */
+    --transformOriginX: calc(50rem * -1);
+
+    --gradientColorOne: #3772FF;
+    --screenWidth: calc(100vw - var(--scrollbar-width));
+    --gradientAngle: var(--angleStrong);
+    --gradientHeight: calc(100% + var(--sectionPaddingTop) + var(--transformOriginX) * var(--angleNormalSin));
+}
+
+/* way the hell off screen */
+.scrollbar-measure {
+	width: 100px;
+	height: 100px;
+	overflow: scroll;
+	position: absolute;
+	top: -9999px;
+}
 
 body {
     margin: 0;
@@ -21,3 +52,38 @@ body {
 .SideBarMenu :hover{
     color: white !important;
 }
+
+.gradientCover {
+    /* 100vw - 16px, 16px is meant to represent the width of the scroll bar */
+    width: var(--screenWidth);
+    left: 0;
+    transform-origin: var(--transformOriginX) 100%;
+    height: var(--gradientHeight);
+    /* transform: skewY(var(--gradientAngle)); */
+    transform: skewY(var(--angleNormal));
+}
+
+.ThirdContent {
+    width: var(--screenWidth);
+    background-color: #F5F5F5;
+}
+
+.titleSection {
+    min-width: calc(100% + 100px);
+}
+
+@media only screen and (max-width: 600px) {
+    :root {
+        --transformOriginX: calc(85rem * -1);
+    }
+
+    .titleSection {
+        max-width: 95%;
+        min-width: 95%;
+        margin: 0 auto;
+    }
+}
+
+/* #interviewify {
+    font-family: 'Urbanist', sans-serif !important;
+} */

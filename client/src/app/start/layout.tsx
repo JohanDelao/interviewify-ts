@@ -161,13 +161,14 @@ export default function RegularLayout({
             />
           </Sider>
           <Layout
-            className="site-layout min-h-screen grid grid-rows-10"
+            className="site-layout min-h-screen"
             style={{ background: 'white' }}
           >
-            <div className="row-span-9 h-full">
-              <Suspense fallback={<Loading />}>{children}</Suspense>
+            <div className="h-full bg-[#1677ff] flex justify-center items-center">
+              <div className='h-[95%] w-[95%] bg-white rounded-xl drop-shadow'>
+                <Suspense fallback={<Loading />}>{children}</Suspense>
+              </div>
             </div>
-            <CustomFooter />
           </Layout>
         </Layout>
       </div>
