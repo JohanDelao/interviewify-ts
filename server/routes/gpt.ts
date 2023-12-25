@@ -26,7 +26,6 @@ router.post('/evaluate', upload.array('audios'), async (req, res) => {
   const questions = req.body.questions ?? [];
   const audios: any = req.files;
   const profession = req.body.profession ?? 'software engineering';
-  questions.pop();
   const systemPrompt = getSystemPrompt(profession);
   const transcriptions = await transcribe(audios);
   const userAnswers = audioToPrompt(transcriptions, questions);
@@ -34,12 +33,10 @@ router.post('/evaluate', upload.array('audios'), async (req, res) => {
   await openai.chat.completions
     .create({
       messages: [systemPrompt, userAnswers],
-      model: 'gpt-4',
+      model: 'gpt-4-1106-preview',
     })
     .then(async (response) => {
       let resp = JSON.parse(response.choices[0].message.content);
-      console.log(response.choices[0]);
-      console.log(resp);
       saveToMongo(resp, transcriptions);
 
       // TODO: send to frontend
