@@ -11,6 +11,7 @@ import {
   GoogleOutlined,
   DatabaseFilled,
   CodeFilled,
+  TagsFilled,
 } from '@ant-design/icons';
 import WelcomeImage from '../../../public/images/Frame 4.png';
 import Logo from '../../../public/images/logo.png';
@@ -152,23 +153,45 @@ function SecondContentCard({ profession, icon }: SecondContentCardProps) {
 function ThirdContent() {
   return (
     <div className="ThirdContent mt-10 mb-20">
-      <div className="flex flex-col md:max-w-5xl grid grid-cols-12 mx-auto mt-10 mb-10">
-          <div className='flex flex-col gap-4 col-span-8 w-11/12'>
-            <p className='font-bold text-lg poppins'>Ready to get started?</p>
-            <p className='text-base text-[#434343]'>Connect your Google account instantly and start practicing your behavioral interview skills in a few minutes! Reach your full potential with the power of AI!</p>
-            <div className='flex items-center gap-5'>
-              <button className='flex items-center justify-center rounded-full w-3/12 py-1 text-white bg-[#3772FF] gap-2 font-medium'>
-                <p>Start Now</p>
-                <RightOutlined className='text-sm leading-none' />
-              </button>
+      <div className="md:max-w-5xl w-[95%] md:w-full flex flex-col-reverse gap-5 md:grid md:grid-cols-12 mx-auto mt-10 mb-10">
+        <div className="flex flex-col gap-4 col-span-8 w-11/12">
+          <p className="font-bold text-lg poppins">Ready to get started?</p>
+          <p className="text-base text-[#434343]">
+            Connect your Google account instantly and start practicing your
+            behavioral interview skills in a few minutes! Reach your full
+            potential with the power of AI!
+          </p>
+          <div className="flex items-center gap-5">
+            <button className="flex items-center justify-center rounded-full w-5/12 md:w-3/12 py-1 text-white bg-[#3772FF] gap-1 font-medium">
+              <p>Start Now</p>
+              <RightOutlined className="text-sm leading-none" />
+            </button>
+            <button className="flex items-center justify-center rounded-full w-5/12 md:w-3/12 py-1 text-[#3772FF] bg-transparent gap-1 font-medium">
+              <p>Contact Us</p>
+              <RightOutlined className="text-sm leading-none" />
+            </button>
+          </div>
+        </div>
+        <div className="col-span-4 flex justify-center">
+          <div className="flex flex-col gap-1">
+            <div className="w-10 h-10 rounded-full bg-white flex justify-center items-center">
+              <TagsFilled className="text-[#3772FF] text-2xl leading-none" />
             </div>
+            <p className="font-bold text-base">Free to use</p>
+            <p className='text-sm text-[#434343]'>Get access to all features and tools without paying a single cent! </p>
           </div>
-          <div className='col-span-4'>
-            There
-          </div>
+        </div>
       </div>
     </div>
   );
+}
+
+function Footer(){
+  return (
+    <div className='flex md:max-w-5xl w-[95%] mx-auto md:w-full items-center md:mt-0"'>
+      
+    </div>
+  )
 }
 
 export default function Welcome() {
