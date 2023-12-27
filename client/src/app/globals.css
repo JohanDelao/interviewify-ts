@@ -8,24 +8,32 @@
 
 :root {
     --scrollbar-width: 0px;
-    --angleNormal: -6deg;
+    /* --angleNormal: -6deg;
     --angleStrong: -12deg;
     --angleNormalSin: 0.106;
-    --angleStrongSin: 0.212;
+    --angleStrongSin: 0.212; */
 
-    --sectionPaddingTop: 116px;
+    --sectionPaddingTop: 10rem;
 
     --layoutWidth: 1024px;
-    --gutterWidth: calc(var(--screenWidth)/2 - var(--layoutWidth)/2);
+    /* --gutterWidth: calc(var(--screenWidth)/2 - var(--layoutWidth)/2); */
 
     /* the larger the rem, the more the 'height' of the gradient decreases */
-    --transformOriginX: calc(50rem * -1);
+    /* --transformOriginX: calc(0rem * -1); */
+    --transformOriginX: -60px;
 
     --gradientColorOne: #3772FF;
     --screenWidth: calc(100vw - var(--scrollbar-width));
-    --gradientAngle: var(--angleStrong);
-    --gradientHeight: calc(100% + var(--sectionPaddingTop) + var(--transformOriginX) * var(--angleNormalSin));
+    --polygonAngle: polygon(0 0, 100% 0, 100% 94%, 0 100%);
+    /* --gradientAngle: var(--angleStrong);
+    --gradientHeight: calc(100%+var(--sectionPaddingTop)+var(--transformOriginX)*var(--angleNormalSin)); */
 }
+
+ /* @media only screen and (min-width: 600px) {
+    :root {
+        --transformOriginX: calc(var(--gutterWidth)*0.8);
+    }
+} */
 
 /* way the hell off screen */
 .scrollbar-measure {
@@ -53,28 +61,57 @@ body {
     color: white !important;
 }
 
+.FirstContent{
+    clip-path: var(--polygonAngle);
+}
+
 .gradientCover {
     /* 100vw - 16px, 16px is meant to represent the width of the scroll bar */
     width: var(--screenWidth);
     left: 0;
-    transform-origin: var(--transformOriginX) 100%;
-    height: var(--gradientHeight);
+    /* transform-origin: var(--transformOriginX) 100%;
+    height: var(--gradientHeight); */
     /* transform: skewY(var(--gradientAngle)); */
-    transform: skewY(var(--angleNormal));
+    /* transform: skewY(var(--angleNormal)); */
+    height: 75%;
+    clip-path: var(--polygonAngle);
 }
 
 .ThirdContent {
     width: var(--screenWidth);
     background-color: #F5F5F5;
+    clip-path: var(--polygonAngle);
 }
 
 .titleSection {
-    min-width: calc(100% + 100px);
+    max-width: 95%;
+    min-width: 95%;
+    margin: 0 auto;
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (min-width: 600px) {
     :root {
-        --transformOriginX: calc(85rem * -1);
+        --polygonAngle: polygon(0 0, 100% 0, 100% 80%, 0 100%);
+    }
+
+    .gradientCover {
+        height: 85%;
+    }
+
+    .titleSection {
+        min-width: calc(100% + 100px);
+    }
+}
+
+/* @media only screen and (min-width: 600px) {
+    :root {
+        --transformOriginX: calc(var(--gutterWidth)*0.8);
+    }
+}
+
+@media only screen and (min-height: 701px) and (max-height: 1000px) {
+    :root {
+        --gradientHeight: calc(65% + var(--sectionPaddingTop) * var(--angleNormalSin));
     }
 
     .titleSection {
@@ -83,6 +120,24 @@ body {
         margin: 0 auto;
     }
 }
+
+@media only screen and (max-height: 700px) {
+    :root {
+        --gradientHeight: calc(90% + var(--sectionPaddingTop) * var(--angleNormalSin));
+    }
+
+    .titleSection {
+        max-width: 95%;
+        min-width: 95%;
+        margin: 0 auto;
+    }
+}
+
+@media (min-height: 1001px) and (max-height: 1025px) {
+    :root{
+        --gradientHeight: calc(70% + var(--sectionPaddingTop) * var(--angleNormalSin));
+    }
+} */
 
 /* #interviewify {
     font-family: 'Urbanist', sans-serif !important;
