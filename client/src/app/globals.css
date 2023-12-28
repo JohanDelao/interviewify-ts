@@ -73,7 +73,6 @@ body {
     height: var(--gradientHeight); */
     /* transform: skewY(var(--gradientAngle)); */
     /* transform: skewY(var(--angleNormal)); */
-    height: 75%;
     clip-path: var(--polygonAngle);
 }
 
@@ -92,10 +91,6 @@ body {
 @media only screen and (min-width: 600px) {
     :root {
         --polygonAngle: polygon(0 0, 100% 0, 100% 80%, 0 100%);
-    }
-
-    .gradientCover {
-        height: 85%;
     }
 
     .titleSection {
