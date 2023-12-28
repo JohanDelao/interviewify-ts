@@ -22,27 +22,45 @@ export default function Interview() {
   const [questions, setQuestions] = useState<string[]>([]);
   const nextQuestion = () => {
     setTime(30);
-    setStarted(false);
     timer('end');
-    if (questionIndex >= questions.length - 1) {
-      evaluate();
-    } else {
+    setStarted(false);
+    if (questionIndex < questions.length - 1)
       setQuestionIndex(questionIndex + 1);
-    }
   };
+
+  const [blobs, setBlobs] = useState<any[]>([]);
+  function handleAudio(recordedBlob: any) {
+    setBlobs((prevBlobs) => [...prevBlobs, recordedBlob.blob]);
+  }
+
+  const [evaluations, setEvaluations] = useState<any[]>([]);
+  useEffect(() => {
+    const saveToMongo = async () => {
+      const data = {
+        evaluations: evaluations,
+      };
+      const resp = await axios.post(
+        'http://localhost:4000/mongo/save-interview',
+        data,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+      router.push('/start/feedback');
+    };
+    if (evaluations.length == numQs) saveToMongo();
+  }, [evaluations]);
 
   // TODO: Need to discuss ways to handle sending request -> redirect to new page -> receiving info
   const evaluate = async () => {
     const formData = new FormData();
 
-    questions.forEach((question) => {
-      formData.append(`questions`, question);
-    });
+    let currIdx = blobs.length - 1;
+    formData.append('question', questions[currIdx] as string);
     formData.append('profession', profession as string);
-    blobs.forEach((blob) => {
-      formData.append(`audios`, blob);
-    });
-
+    formData.append('audio', blobs[currIdx]);
     const resp = await axios.post(
       'http://localhost:4000/gpt/evaluate',
       formData,
@@ -52,8 +70,7 @@ export default function Interview() {
         },
       },
     );
-    console.log(resp);
-    router.push('/start/feedback');
+    setEvaluations((prevEvals) => [...prevEvals, resp.data]);
   };
 
   const restartQuestion = () => {
@@ -99,11 +116,6 @@ export default function Interview() {
 
   const [muted, setMuted] = useState<boolean>(false);
 
-  const [blobs, setBlobs] = useState<any[]>([]);
-  function handleAudio(recordedBlob: any) {
-    setBlobs((prevBlobs) => [...prevBlobs, recordedBlob.blob]);
-  }
-
   function handleData(recordedBlob: any) {
     console.log('chunk of real-time data is: ', recordedBlob);
   }
@@ -115,9 +127,9 @@ export default function Interview() {
     setTime(30);
   }, []);
 
-  // to see when blob urls gets updated
+  // when blobs gets updated, evalaute new blob
   useEffect(() => {
-    console.log('Updated Blob URLs:', blobs);
+    if (blobs.length > 0) evaluate();
   }, [blobs]);
 
   const CardTitleUI = () => {

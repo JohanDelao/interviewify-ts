@@ -4,19 +4,16 @@ type UserAnswer = {
 };
 
 export function audioToPrompt(
-  transcriptions: Array<string>,
-  questions: Array<string>
+  transcription: string,
+  question: string
 ): UserAnswer {
-  let userAnswers: UserAnswer = {
+  let answer: UserAnswer = {
     role: 'user',
     content: '',
   };
-  for (let i = 0; i < questions.length; i++) {
-    let content = {
-      question: questions[i],
-      answer: transcriptions[i],
-    };
-    userAnswers.content += JSON.stringify(content);
-  }
-  return userAnswers;
+  answer.content = JSON.stringify({
+    question: question,
+    answer: transcription,
+  });
+  return answer;
 }
