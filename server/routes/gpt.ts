@@ -24,24 +24,17 @@ router.post('/evaluate', upload.array('audio'), async (req, res) => {
   const audio: any = req.files[0];
   const profession = req.body.profession ?? 'software engineering';
   const systemPrompt = getSystemPrompt(profession);
-  // let transcription = await transcribe(audio);
-
-  // for testing
-  const transcription =
-    "I'm a finance professional with over ten years of experience in investment banking. In my current role, I oversee a team of analysts and have successfully completed numerous high-value transactions. I'm excited to bring my expertise to a new company and help drive success. In addition to my work in investment banking, I've developed a strong network within the industry and stay up-to-date on industry trends through attending conferences and participating in professional organizations. I'm confident that my expertise and connections will benefit a new company.";
+  let transcription = await transcribe(audio);
   const userAnswers = audioToPrompt(transcription, question);
-  console.log(userAnswers);
   await openai.chat.completions
     .create({
       messages: [systemPrompt, userAnswers],
       model: 'gpt-4-1106-preview',
     })
     .then(async (response) => {
-      console.log(response.choices[0].message.content);
       let resp = '';
       try {
         resp = JSON.parse(response.choices[0].message.content);
-        console.log('resp', resp);
       } catch (err) {
         resp = response.choices[0].message.content;
         console.log('JSON Error:', err);
