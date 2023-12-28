@@ -23,7 +23,6 @@ passport.use(
           email: email,
           _id: profile.id,
         });
-        console.log(newUser);
         return done(null, newUser);
       }
     }
