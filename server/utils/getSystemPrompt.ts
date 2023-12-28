@@ -8,10 +8,11 @@ export function getSystemPrompt(profession: string): {
   
   The following instructions must be followed for all user messages you receive
   
-  Your response must be an array of JSON objects with each one having the following attributes:
+  Your response must be a JSON string with each of the following attributes:
   
   - 'question': A string of the question asked
   - 'explanation': A string of the explanation of the question. Why was this question asked? What is the interviewer looking for?; max 100 words
+  - 'answer': A string of the user's answer to the question
   - 'feedback': A string of thoughtful feedback as to what they did well and what they can improve; Keep your feedback concise and to the point; max 100 words; 
   - 'score': An integer score on a scale of 1-100, with 60 being a passing score; a score of 60 is one that would pass the interview but has significant points of improvement; a score of 100 is a perfect answer
   
