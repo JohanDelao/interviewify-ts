@@ -15,6 +15,6 @@ export async function transcribe(audio: any): Promise<string> {
     .then((response: any) => {
       transcription = response.text;
     })
-    .catch((err) => console.log(`❌ Transcription error: ${err}`)); // TODO: handle error
+    .catch((err) => console.log(`❌ Transcription error: ${err}`, audioFile)); // TODO: handle error
   return transcription;
 }

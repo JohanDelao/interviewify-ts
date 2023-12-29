@@ -32,12 +32,14 @@ router.post('/evaluate', upload.array('audio'), async (req, res) => {
       model: 'gpt-4-1106-preview',
     })
     .then(async (response) => {
-      let resp = '';
+      let resp = response.choices[0].message.content;
+      if (resp.includes('```json'))
+        resp = resp.replace('```json', '').replace('```', '');
+
       try {
-        resp = JSON.parse(response.choices[0].message.content);
+        resp = JSON.parse(resp);
       } catch (err) {
-        resp = response.choices[0].message.content;
-        console.log('JSON Error:', err);
+        console.log('JSON ERROR', resp);
       }
 
       res.status(200).json(resp);
