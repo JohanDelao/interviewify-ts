@@ -2,11 +2,11 @@ import mongoose from 'mongoose';
 import qa_feedbackModel from '../Models/qa_feedbackModel';
 import interviewModel from '../Models/interviewModel';
 
-export function saveToMongo(evaluations): void {
+export function saveToMongo(userId, evaluations): void {
   const interviewID = new mongoose.Types.ObjectId();
   const newInterview = new interviewModel({
     _id: interviewID,
-    user_id: new mongoose.Types.ObjectId(), // TODO: need to put the current user id here (possibly comes from frontend / atleast the email should come then server can query)
+    user_id: userId,
     qa_feedbacks: [],
   });
 
