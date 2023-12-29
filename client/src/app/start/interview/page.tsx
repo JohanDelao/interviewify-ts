@@ -48,6 +48,7 @@ export default function Interview() {
           },
         },
       );
+      console.log('Success', evaluations, resp);
       router.push('/start/feedback');
     };
     if (evaluations.length == numQs) saveToMongo();

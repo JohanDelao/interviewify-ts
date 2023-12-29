@@ -22,7 +22,7 @@ export function saveToMongo(evaluations): void {
     });
     newInterview.qa_feedbacks.push(QAFeedbackEntry._id);
     QAFeedbackEntry.save().catch((err) =>
-      console.log('❌ Error saving QAFeedback: ' + err)
+      console.log('❌ Error saving QAFeedback: ', err, evaluation)
     );
   }
   newInterview
