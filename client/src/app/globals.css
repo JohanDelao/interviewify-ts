@@ -8,23 +8,26 @@
 
 :root {
     --scrollbar-width: 0px;
-    /* --angleNormal: -6deg;
+    --angleNormal: -3deg;
     --angleStrong: -12deg;
     --angleNormalSin: 0.106;
-    --angleStrongSin: 0.212; */
+    --angleStrongSin: 0.212;
 
     --sectionPaddingTop: 10rem;
 
     --layoutWidth: 1024px;
-    /* --gutterWidth: calc(var(--screenWidth)/2 - var(--layoutWidth)/2); */
+    --gutterWidth: calc(var(--screenWidth)/2 - var(--layoutWidth)/2);
 
     /* the larger the rem, the more the 'height' of the gradient decreases */
     /* --transformOriginX: calc(0rem * -1); */
     --transformOriginX: -60px;
 
+    /* nav height + content in left col + padding + gap */
+    --contentHeight: calc(var(--content-height) + var(--nav-height) + 100px);
+
     --gradientColorOne: #3772FF;
-    --screenWidth: calc(100vw - var(--scrollbar-width));
-    --polygonAngle: polygon(0 0, 100% 0, 100% 94%, 0 100%);
+    --screenWidth: 100vw;
+    /* --polygonAngle: polygon(0 0, 100% 0, 100% 94%, 0 100%); */
     /* --gradientAngle: var(--angleStrong);
     --gradientHeight: calc(100%+var(--sectionPaddingTop)+var(--transformOriginX)*var(--angleNormalSin)); */
 }
@@ -69,11 +72,11 @@ body {
     /* 100vw - 16px, 16px is meant to represent the width of the scroll bar */
     width: var(--screenWidth);
     left: 0;
-    /* transform-origin: var(--transformOriginX) 100%;
-    height: var(--gradientHeight); */
+    transform-origin: var(--transformOriginX) 100%;
+    max-height: calc(var(--contentHeight));
     /* transform: skewY(var(--gradientAngle)); */
-    /* transform: skewY(var(--angleNormal)); */
-    clip-path: var(--polygonAngle);
+    transform: skewY(var(--angleNormal));
+    /* clip-path: var(--polygonAngle); */
 }
 
 .ThirdContent {
@@ -91,6 +94,7 @@ body {
 @media only screen and (min-width: 600px) {
     :root {
         --polygonAngle: polygon(0 0, 100% 0, 100% 80%, 0 100%);
+        --screenWidth: calc(100vw - var(--scrollbar-width));
     }
 
     .titleSection {
@@ -98,12 +102,15 @@ body {
     }
 }
 
-/* @media only screen and (min-width: 600px) {
+@media only screen and (min-width: 600px) {
     :root {
-        --transformOriginX: calc(var(--gutterWidth)*0.8);
+        --angleNormal: -6deg;
+
+        --contentHeight: calc(var(--content-height) + var(--nav-height) + 40px + 150px);
     }
 }
 
+/*
 @media only screen and (min-height: 701px) and (max-height: 1000px) {
     :root {
         --gradientHeight: calc(65% + var(--sectionPaddingTop) * var(--angleNormalSin));

@@ -21,7 +21,7 @@ interface SecondContentCardProps {
 
 function NavbarLayout() {
   return (
-    <div className="w-[95%] md:max-w-5xl mx-auto lg:w-full pt-2 z-[2]">
+    <div className="w-[95%] md:max-w-5xl mx-auto lg:w-full pt-2 z-[2]" id='navbar'>
       <div className="w-full flex flex-col gap-10 md:max-w-5xl md:mx-auto">
         <div className="flex justify-between items-center text-white">
           <svg
@@ -55,7 +55,7 @@ function FirstContent() {
     <div className="flex w-[100%] lg:w-full md:max-w-5xl mx-auto justify-center items-center">
       <div className="flex flex-col w-full md:grid md:grid-cols-2 justify-center items-center md:items-start">
         <div className="md:grid-cols-1 grid md:mt-5">
-          <div className="flex flex-col gap-6 md:gap-10 z-[2] titleSection">
+          <div className="flex flex-col gap-6 md:gap-10 z-[2] titleSection" id='titleSection'>
             <p className="text-4xl md:text-6xl font-bold text-white poppins w-full z-[2] leading-snug">
               Master the Behavioral Interview
             </p>
@@ -99,7 +99,7 @@ function FirstContent() {
 
 function SecondContent() {
   return (
-    <div className="flex md:max-w-5xl mt-32 w-[95%] mx-auto lg:w-full items-center md:mt-0">
+    <div className="flex md:max-w-5xl mt-16 w-[95%] mx-auto lg:w-full items-center md:mt-0">
       <div className="flex w-full flex-col">
         <div className="flex flex-col md:gap-2">
           <p className="font-bold text-[#3772FF] text-base md:text-lg">
@@ -240,6 +240,26 @@ export default function Welcome() {
       '--scrollbar-width',
       `${scrollbarWidth}px`,
     );
+    
+    const content = document.getElementById('titleSection');
+    const contentHeight = content?.clientHeight;
+    
+    const nav = document.getElementById('navbar');
+    const navHeight = nav?.clientHeight;
+    
+
+    document.documentElement.style.setProperty(
+      '--content-height',
+      `${contentHeight}px`,
+    );
+    document.documentElement.style.setProperty(
+      '--nav-height',
+      `${navHeight}px`,
+    );
+
+    console.log(navHeight)
+    console.log(contentHeight)
+
   }, []); // Run this effect only once after the component mounts
 
   return (
