@@ -12,6 +12,7 @@ import './passport';
 //setup routes
 import authRoute from './routes/auth';
 import gptRoute from './routes/gpt';
+import mongoRoute from './routes/mongo';
 
 //config environment variables
 import dotenv from 'dotenv';
@@ -70,6 +71,7 @@ mongoose
 //use routes and listen
 app.use('/auth', authRoute);
 app.use('/gpt', gptRoute);
+app.use('/mongo', mongoRoute);
 
 app.listen(PORT, () => {
   console.log(`✅ Server listening on PORT ${PORT}`);
