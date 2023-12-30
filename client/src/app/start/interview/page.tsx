@@ -46,6 +46,7 @@ export default function Interview() {
           headers: {
             'Content-Type': 'application/json',
           },
+          withCredentials: true,
         },
       );
       console.log('Success', evaluations, resp);
