@@ -193,6 +193,19 @@ export default function Interview() {
 
   return (
     <div className="lg:max-w-screen-lg lg:mx-auto lg:justify-normal flex flex-col w-full mt-8 gap-16 lg:gap-36 h-full justify-center">
+      <div className='flex'>  
+        <div className='w-full flex flex-col gap-2'>
+          <div className='flex gap-4 items-center w-full'>
+            <p className='text-3xl font-bold'>Interview</p>
+            <hr className='border-l-2 border-[#BFBFBF] h-5 rounded-full'></hr>
+            <p className='text-md text-[#BFBFBF]'>{numQs} questions</p>
+            <Progress className='w-24 m-0' percent={((questionIndex ) / numQs)*100} showInfo={false} />
+          </div>
+          <div>
+            <p className='text-md text-[#BFBFBF]'>{profession}</p>
+          </div>
+        </div>
+      </div>
       <Card title={CardTitleUI()}>
         <div className="flex justify-between">
           <div className="flex flex-col gap-5">

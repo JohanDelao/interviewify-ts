@@ -4,6 +4,29 @@
 @tailwind utilities;
 
 @import './styles/loading.css';
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap');
+
+:root {
+    --scrollbar-width: 0px;
+    --angleNormal: -3deg;
+
+    --transformOriginX: -60px;
+
+    /* nav height + content in left col + padding + gap */
+    --contentHeight: calc(var(--content-height) + var(--nav-height) + 120px);
+
+    --gradientColorOne: #3772FF;
+    --screenWidth: 100vw;
+}
+
+/* way the hell off screen */
+.scrollbar-measure {
+	width: 100px;
+	height: 100px;
+	overflow: scroll;
+	position: absolute;
+	top: -9999px;
+}
 
 body {
     margin: 0;
@@ -20,4 +43,47 @@ body {
 
 .SideBarMenu :hover{
     color: white !important;
+}
+
+.FirstContent{
+    clip-path: var(--polygonAngle);
+}
+
+.gradientCover {
+    /* 100vw - 16px, 16px is meant to represent the width of the scroll bar */
+    width: var(--screenWidth);
+    left: 0;
+    transform-origin: var(--transformOriginX) 100%;
+    max-height: calc(var(--contentHeight));
+    transform: skewY(var(--angleNormal));
+}
+
+.ThirdContent {
+    width: var(--screenWidth);
+    background-color: #F5F5F5;
+    clip-path: var(--polygonAngle);
+}
+
+.titleSection {
+    max-width: 95%;
+    min-width: 95%;
+    margin: 0 auto;
+}
+
+@media only screen and (min-width: 600px) {
+    :root {
+        --polygonAngle: polygon(0 0, 100% 0, 100% 80%, 0 100%);
+        --screenWidth: calc(100vw - var(--scrollbar-width));
+    }
+
+    .titleSection {
+        min-width: calc(100% + 100px);
+    }
+}
+
+@media only screen and (min-width: 600px) {
+    :root {
+        --angleNormal: -6deg;
+        --contentHeight: calc(var(--content-height) + var(--nav-height) + 40px + 200px);
+    }
 }
