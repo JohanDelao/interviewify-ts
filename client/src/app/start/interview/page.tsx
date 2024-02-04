@@ -1,8 +1,8 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import GetQuestions from '@/app/utils/get-questions';
+import GetQuestions from '../../utils/get-questions';
 import { useRouter, useSearchParams } from 'next/navigation';
-import getProfessionType from '@/app/utils/get-profession-type';
+import getProfessionType from '../../utils/get-profession-type';
 import Card from 'antd/es/card/Card';
 import { AudioOutlined, AudioMutedOutlined } from '@ant-design/icons';
 import { Button, Progress, Modal } from 'antd';
@@ -53,7 +53,6 @@ export default function Interview() {
           withCredentials: true,
         },
       );
-      console.log('Success', evaluations, resp);
       router.push('/start/feedback');
     };
     if (evaluations.length == numQs) saveToMongo();
@@ -127,10 +126,6 @@ export default function Interview() {
   };
 
   const [muted, setMuted] = useState<boolean>(false);
-
-  function handleData(recordedBlob: any) {
-    console.log('chunk of real-time data is: ', recordedBlob);
-  }
 
   useEffect(() => {
     const questions = GetQuestions(profession ? profession : undefined, numQs);
