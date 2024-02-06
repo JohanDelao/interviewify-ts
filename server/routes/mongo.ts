@@ -12,9 +12,11 @@ dotenv.config();
 
 router.post('/save-interview', async (req, res) => {
   const evaluations = req.body.evaluations;
+  const position = req.body.position;
+
   try {
     const userId = (req.user as { _id: Schema.Types.ObjectId })._id;
-    saveToMongo(userId, evaluations);
+    saveToMongo(userId, evaluations, position);
     res.status(200).send('Successfully saved to mongo');
   } catch (err) {
     res.status(400).send({ error: `❌ Mongo error: ${err}` });
