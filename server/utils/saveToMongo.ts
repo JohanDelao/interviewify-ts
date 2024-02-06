@@ -2,12 +2,14 @@ import mongoose from 'mongoose';
 import qa_feedbackModel from '../Models/qa_feedbackModel';
 import interviewModel from '../Models/interviewModel';
 
-export function saveToMongo(userId, evaluations): void {
+export function saveToMongo(userId, evaluations, position): void {
   const interviewID = new mongoose.Types.ObjectId();
   const newInterview = new interviewModel({
     _id: interviewID,
     user_id: userId,
     qa_feedbacks: [],
+    position: position,
+    score: 0,
   });
 
   for (const evaluation of evaluations) {
@@ -21,6 +23,7 @@ export function saveToMongo(userId, evaluations): void {
       score: evaluation.score,
     });
     newInterview.qa_feedbacks.push(QAFeedbackEntry._id);
+    newInterview.score += evaluation.score;
     QAFeedbackEntry.save().catch((err) =>
       console.log('❌ Error saving QAFeedback: ', err, evaluation)
     );
